@@ -1,28 +1,25 @@
-
 # 🔐 API Security Risk Analysis Report
 
-> **A professional, read-only API security audit performed on public demo APIs, following OWASP API Security Top 10 methodology.**
-
----
+A professional, read-only API security audit performed on public demo APIs and enterprise SaaS ecosystem integrations, following the OWASP API Security Top 10 methodology.
 
 ## 📌 Project Overview
-
-This repository contains a complete **API Security Risk Analysis** — the kind of assessment performed by AppSec consultants and cybersecurity agencies for SaaS clients. The audit was conducted entirely on **public/demo APIs** using read-only methods, with no exploitation or system modification.
+This repository contains a comprehensive API Security Risk Analysis — the kind of assessment performed by AppSec consultants and cybersecurity agencies for SaaS clients. The audit consists of two main components:
+1. **Public/Demo API Audits**: Conducted entirely on public/demo APIs using read-only methods, with no exploitation or system modification.
+2. **Enterprise Integration Analysis**: A strategic architecture and session-state security review of downstream Canva Ecosystem integrations.
 
 | Field | Details |
-|---|---|
-| **Audit Type** | Read-Only API Security Risk Analysis |
+| :--- | :--- |
+| **Audit Types** | Read-Only API Security Risk Analysis & Strategic Integration Assessment |
 | **Methodology** | OWASP API Security Top 10 |
-| **APIs Tested** | JSONPlaceholder, ReqRes |
-| **Scope** | Authentication, Authorization, Data Exposure, Rate Limiting, Headers |
-| **Tools Used** | Postman, Browser DevTools, Manual Inspection |
+| **Target Scopes** | JSONPlaceholder, ReqRes, Canva Ecosystem App-to-Platform Framework |
+| **Layers Evaluated**| Authentication, Authorization, Session-State Boundaries, Asset Lifecycles |
+| **Tools Used** | Postman, Browser DevTools, Manual Inspection, Architectural Review |
 | **Report Format** | PDF / DOCX (see `/report/`) |
 
 ---
 
 ## 📁 Repository Structure
-
-```
+```text
 api-security-audit/
 │
 ├── README.md                        ← You are here
@@ -32,145 +29,20 @@ api-security-audit/
 │   └── API_Security_Risk_Report.docx← Final deliverable (Word)
 │
 ├── screenshots/
-│   ├── 01_jsonplaceholder_users_response.png
-│   ├── 02_reqres_unauth_user_access.png
-│   ├── 03_missing_auth_headers.png
-│   ├── 04_rate_limit_test.png
-│   └── 05_excessive_data_exposure.png
+│   ├── 01_jsonplaceholder_posts_get.png     ← Verifying resource retrieval logic
+│   ├── 02_jsonplaceholder_raw_response.png  ← Public unauthenticated JSON payload raw view
+│   ├── 03_jsonplaceholder_post_request.png  ← Testing state-changing operations (POST)
+│   └── 04_jsonplaceholder_html_landing.png  ← Analyzing base route headers & routing behavior
 │
 ├── postman/
 │   └── API_Security_Audit.postman_collection.json
 │
 └── findings/
     ├── FINDINGS_SUMMARY.md          ← Quick risk summary
-    └── remediation_checklist.md     ← Step-by-step fix list
-```
-
----
-
-## 🎯 Scope & Ethics
-
-### ✅ In Scope (Allowed)
-- Public and demo APIs only (`jsonplaceholder.typicode.com`, `reqres.in`)
-- Read-only HTTP requests: `GET`, safe `POST` (login/register endpoints)
-- Documentation-based risk analysis
-- Header, token, and response structure inspection
-- Rate limiting behavior observation
-
-### ❌ Out of Scope (Not Allowed)
-- Exploitation or authentication bypass attempts
-- Denial-of-Service (DoS) or flood testing
-- Attacking private, staging, or production APIs
-- Reverse engineering proprietary systems
-- Any unauthorized access or data extraction
-
-> **This audit is purely educational and ethical. No systems were harmed, modified, or exploited.**
-
----
-
-## 🛠️ Tools Used
-
-| Tool | Purpose |
-|---|---|
-| **Postman** | API endpoint testing, request inspection, response analysis |
-| **Browser DevTools** | Header inspection, network tab analysis |
-| **OWASP API Top 10** | Risk classification framework |
-| **Manual Review** | Documentation analysis, logic review |
-
----
-
-## 🔬 Methodology
-
-This audit follows a structured 6-phase approach:
-
-```
-Phase 1: Reconnaissance
-  └── Review API documentation, identify endpoints, map data flows
-
-Phase 2: Authentication Analysis
-  └── Test for missing/weak auth, token validation, open endpoints
-
-Phase 3: Authorization Testing
-  └── Check BOLA/IDOR — can user A access user B's data?
-
-Phase 4: Data Exposure Review
-  └── Inspect response payloads for over-sharing of sensitive fields
-
-Phase 5: Security Header Inspection
-  └── Evaluate HTTP response headers for security hygiene
-
-Phase 6: Rate Limiting & Input Validation
-  └── Observe rate limit behavior, test for improper input handling
-```
-
----
-
-## 🚨 Key Findings Summary
-
-| # | Risk | API | Severity | OWASP Category |
-|---|---|---|---|---|
-| 1 | Unauthenticated access to all user data | JSONPlaceholder | 🔴 High | API1 – Broken Object Level Auth |
-| 2 | Excessive data exposure in responses | JSONPlaceholder | 🟠 Medium | API3 – Excessive Data Exposure |
-| 3 | No rate limiting on endpoints | JSONPlaceholder | 🟠 Medium | API4 – Lack of Resources & Rate Limiting |
-| 4 | Missing security headers | ReqRes | 🟡 Low | API7 – Security Misconfiguration |
-| 5 | Predictable resource IDs (BOLA risk) | ReqRes | 🔴 High | API1 – Broken Object Level Auth |
-| 6 | Weak or no token expiry enforcement | ReqRes | 🟠 Medium | API2 – Broken Authentication |
-
-> Full risk descriptions, business impact, and remediation steps are in the [report/](./report/) folder.
-
----
-
-## 📊 Risk Distribution
-
-```
-HIGH     ██████████  2 findings
-MEDIUM   ███████     3 findings
-LOW      ███         1 finding
-```
-
----
-
-## 🔧 Remediation Highlights
-
-**For API developers and SaaS teams:**
-
-1. **Enforce authentication on every endpoint** — no anonymous access to user/resource data
-2. **Implement RBAC/ABAC** — users should only access their own resources
-3. **Filter response payloads** — return only fields the client actually needs
-4. **Add rate limiting** — per IP and per authenticated user (e.g. 100 req/min)
-5. **Set security headers** — `X-Content-Type-Options`, `X-Frame-Options`, `Strict-Transport-Security`
-6. **Use short-lived tokens with refresh flows** — don't issue non-expiring tokens
-
----
-
-## 📚 Reference Resources
-
-| Resource | Link |
-|---|---|
-| OWASP API Security Top 10 | https://github.com/OWASP/API-Security |
-| API Security Checklist | https://github.com/shieldfy/API-Security-Checklist |
-| Public APIs (for testing) | https://github.com/public-apis/public-apis |
-| JSONPlaceholder | https://jsonplaceholder.typicode.com |
-| ReqRes | https://reqres.in |
-
----
-
-## 👤 Author
-
-| Field | Info |
-|---|---|
-| **Role** | Security Analyst / AppSec Consultant |
-| **Audit Date** | June 2026 |
-| **Contact** |https://github.com/bondidhanush01-bit |
-
----
-
-## 📄 License
-
-This project is for **educational and portfolio purposes only**.  
-All testing was performed on **public demo APIs** intended for developer testing.  
-No proprietary systems, private data, or production environments were accessed.
-
----
-
-> *"Security is not a product, but a process."* — Bruce Schneier
+    ├── remediation_checklist.md     ← Step-by-step fix list
+    └── CANVA_INTEGRATION_REVIEW.md  ← Strategic architectural deep-dive
+🎯 Scope & Ethics✅ In Scope (Allowed)Public and demo APIs only (jsonplaceholder.typicode.com, reqres.in)Read-only HTTP requests: GET, safe mock POST operationsDocumentation-based risk analysis and SaaS architecture evaluationHeader, token, and response structure inspection❌ Out of Scope (Not Allowed)Exploitation or authentication bypass attempts on production architecturesDenial-of-Service (DoS) or flood testingAttacking private corporate tenants or staging clustersAny unauthorized access, system modification, or real-world data extractionNote: This audit is purely educational and ethical. No systems were harmed, modified, or exploited.🔬 MethodologyThis audit follows a structured approach to map out architectural discrepancies across standard pathways and complex SaaS ecosystems:Phase 1: Reconnaissance & Integration MappingReview API landing page behavior, base endpoints, and platform-to-app communication protocols.Artifact Reference:Phase 2: Authentication AnalysisTest for missing/weak auth, open endpoints, and lack of token verification over core pathways.Phase 3: Authorization Testing (BOLA/IDOR)Check if sequential resource IDs expose arbitrary data records natively without session bindings.Artifact Reference:Phase 4: Data Exposure ReviewEvaluate backend responses to determine if entire object profiles are returned when only partial data is required.Artifact Reference:Phase 5: State-Mutation & Transaction SafetyEvaluate structural handling of input properties, state flows (such as drafting versus committing modifications), and multi-tenant isolation parameters.Artifact Reference:Phase 6: Rate Limiting & Resource ConsumptionObserve rate limit behavior, payload batch boundaries, and missing transport-hardening protections.🚨 Key Findings Summary1. Core Sandbox Vulnerabilities (Public/Demo APIs)#Risk DescriptionTarget APISeverityOWASP CategoryEvidence1Unauthenticated access to all structural data pathwaysJSONPlaceholder🔴 HighAPI1:2023 – Broken Object Level AuthView GET Request2Excessive data exposure within broad response payloadsJSONPlaceholder🟠 MediumAPI3:2023 – Broken Property Level AuthView Raw Data3Unvalidated mock creation via unprotected state methodsJSONPlaceholder🟠 MediumAPI6:2023 – Unsafe Consumption of APIsView POST Request4Missing strict security transport and hardening headersReqRes / Base🟡 LowAPI7:2023 – Security MisconfigurationView Base Response5Predictable incremental resource IDs (High BOLA exposure)ReqRes🔴 HighAPI1:2023 – Broken Object Level Auth—6Lack of explicit rate constraints or structural throttlingJSONPlaceholder🟠 MediumAPI4:2023 – Unrestricted Resource Consumption—2. Strategic Canva Platform Integration Risk MatrixFinding IDVulnerability TitleOWASP API 2023 MatchSeverityCAN-SEC-01Transaction Session Hijacking / Stale State Commit  API1:2023 – Broken Object Level Authorization  🔴 High  CAN-SEC-02Unrestricted Multi-Page Media Injection  API4:2023 – Unrestricted Resource Consumption  🟠 Medium  CAN-SEC-03Scope Creep via Over-Privileged OAuth Asset Tokens  API5:2023 – Broken Function Level Authorization  🟠 Medium  📊 Global Risk DistributionPlaintextHIGH     ██████████████      4 findings
+MEDIUM   █████████████████   5 findings
+LOW      ███                 1 finding
+🔍 Detailed Strategic Vulnerability Breakdown (Canva Integration)🔴 CAN-SEC-01: Transaction Session Hijacking / Stale State Commit RisksArchitectural Component: State sequence handler  Technical Observation: The integration uses a clear state workflow where edits are kept as temporary drafts before they are permanently written to the design. However, if a client application caches this globally or fails to strictly validate user permissions during cross-origin calls between initialization and completion, a malicious actor within the same workspace could guess or intercept the identifier. They could then complete the commit process prematurely or alter the payload contents.  Business Impact: Attackers can hijack active document editing sessions to insert unauthorized imagery, alter corporate marketing collateral maliciously, or tamper with financial graphics before a user finalizes their design. This directly compromises corporate identity and data integrity.  Remediation Steps:Cryptographic Sealing: Ensure that the state identifier is a high-entropy, short-lived token bound strictly to the cryptographically verified user session that initiated it.  Double-Ended Authorization: Re-validate the caller's OAuth tokens and user permissions at the precise moment the final commit is invoked, matching them against the session that called initialization.  🟠 CAN-SEC-02: Unrestricted Multi-Page Media InjectionArchitectural Component: Mass Payload Arrays  Technical Observation: The array allows multiple changes to be batched together across different pages at the same time. If a client app doesn't enforce strict array size limits before forwarding payloads to backend web services, an integration layer could face severe memory consumption spikes when handling oversized batches. This occurs when large amounts of heavy media elements are injected onto multiple responsive pages simultaneously.  Business Impact: Malicious workspace users or compromised integrated apps can send bloated transaction payloads. This can freeze layout rendering engines, cause timeouts, and degrade performance for all other users working within the shared enterprise tenancy.  Remediation Steps:Array Payload Bounds: Enforce a strict threshold limit on the maximum number of structural operations (e.g., maximum 50 canvas mutations) permitted per individual call.  Asynchronous Layout Throttling: Process heavy layout updates on responsive design pages inside an isolated queue workers pool rather than synchronously blocking main thread execution.  🟠 CAN-SEC-03: Scope Creep via Over-Privileged OAuth Asset TokensArchitectural Component: OAuth Token & Permission Matrix  Technical Observation: When cross-functional third-party modules or connectors pull assets or look up brand guidelines, the integration often defaults to broad team scopes. This can grant apps read access to the entire design directory or all brand kits, even when the specific user task only requires access to a single template asset.  Business Impact: If a malicious or compromised third-party app gains broad team-wide read scopes, it could lead to large-scale data harvesting. Attackers could steal unreleased product designs, proprietary corporate layouts, or sensitive strategic roadmaps managed across different teams.  Remediation Steps:Context-Driven Scoping: Enforce contextual scoping flags on integration routes. If an app only needs to populate a template, restrict its downstream calls strictly to that singular asset ID.  Ephemeral Context Tokens: Issue temporary runtime tokens for design access that expire immediately after the transaction session is completed or closed.  🔧 Remediation HighlightsFor API developers and SaaS infrastructure teams:Enforce Authentication everywhere: Ensure no anonymous tracking endpoints allow public scraping of individual resource profiles.Implement Contextual Authorization: Validate that the requesting token matches the precise resource boundary ownership using explicit object checks.Filter Data Payloads at the Data Layer: Avoid sending complete row representations to frontend interfaces; select only properties explicit to user requirements.Implement Throttling Mechanisms: Apply global and route-specific rate-limiting rules (e.g., maximum 100 requests per minute per identifier).Treat State Token Lifecycles Rigorously: Developers building on multi-tenant ecosystem APIs must treat the lifecycle of transient values with the same cryptographic rigor as master authentication sessions.  📚 Reference ResourcesOWASP API Security Top 10 FrameworkAPI Security Checklist GuidelinesCanva Developer Platform DocumentationJSONPlaceholder Target API Sandbox👤 AuthorRole: Senior Application Security & SaaS Consultant  Audit Date: June 2026  Contact:(https://github.com/bondidhanush01-bit) | [www.linkedin.com/in/
+dhanush-bondi-978697352]"Security is not a product, but a process." — Bruce Schneier.
